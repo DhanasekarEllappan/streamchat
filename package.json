@@ -1,0 +1,21 @@
+{
+  "name": "streamchat",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "dhanasekar.ellappan",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "body-parser": "^2.2.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0"
+  }
+}
+ 
