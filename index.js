@@ -13,15 +13,11 @@ app.use(bodyParser.json()); // This is the crucial line you're missing
 // Initialize Gemini
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
-// Streaming chat endpoint
+// Chat endpoint (No Streaming)
 app.post('/api/chat', async (req, res) => {
     const { messages } = req.body;
 
     try {
-        res.setHeader('Content-Type', 'text/event-stream');
-        res.setHeader('Cache-Control', 'no-cache');
-        res.setHeader('Connection', 'keep-alive');
-
         // Get the Gemini model (using gemini-pro for text)
         const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
@@ -34,17 +30,12 @@ app.post('/api/chat', async (req, res) => {
         });
 
         const userMessage = messages[messages.length - 1].content;
-        const result = await chat.sendMessageStream(userMessage);
+        
+        // Get the full response (no streaming)
+        const result = await chat.sendMessage(userMessage);
 
-        // Stream the response
-        for await (const chunk of result.stream) {
-            const chunkText = chunk.text();
-            res.write(`data: ${JSON.stringify({ content: chunkText })}\n\n`);
-            console.log(chunkText)
-        }
-
-        res.write(`data: ${JSON.stringify({ done: true })}\n\n`);
-        res.end();
+        // Send back the full result
+        res.json({ content: result.text });
 
     } catch (error) {
         console.error('Error:', error);
@@ -56,4 +47,3 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
- 
