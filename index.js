@@ -34,7 +34,7 @@ app.post('/api/chat', async (req, res) => {
         // ✅ Extract proper text
         const output = result.response?.candidates?.[0]?.content?.parts?.[0]?.text || '';
 
-        res.json({ content: output });
+        res.json({ message: output,role: "model" });
 
     } catch (error) {
         console.error('Error:', error);
