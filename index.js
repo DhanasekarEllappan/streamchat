@@ -18,10 +18,8 @@ app.post('/api/chat', async (req, res) => {
     const { messages } = req.body;
 
     try {
-        // Get the Gemini model (using gemini-pro for text)
         const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
-        // Convert messages to Gemini's format
         const chat = model.startChat({
             history: messages.slice(0, -1).map(msg => ({
                 role: msg.role === 'user' ? 'user' : 'model',
@@ -31,17 +29,19 @@ app.post('/api/chat', async (req, res) => {
 
         const userMessage = messages[messages.length - 1].content;
         
-        // Get the full response (no streaming)
         const result = await chat.sendMessage(userMessage);
 
-        // Send back the full result
-        res.json({ content: result.text });
+        // ✅ Extract proper text
+        const output = result.response?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+
+        res.json({ content: output });
 
     } catch (error) {
         console.error('Error:', error);
         res.status(500).json({ error: 'An error occurred' });
     }
 });
+
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
