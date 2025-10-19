@@ -27,14 +27,14 @@ app.post('/api/chat', async (req, res) => {
             })),
         });
 
-        const userMessage = messages[messages.length - 1].content;
+        const userMessage = messages[messages.length - 1].message;
         
         const result = await chat.sendMessage(userMessage);
 
         // ✅ Extract proper text
         const output = result.response?.candidates?.[0]?.content?.parts?.[0]?.text || '';
 
-        res.json({ message: output,role: "model" });
+        res.json({ message: output, role:"model" });
 
     } catch (error) {
         console.error('Error:', error);
