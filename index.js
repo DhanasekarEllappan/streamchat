@@ -23,7 +23,7 @@ app.post('/api/chat', async (req, res) => {
         const chat = model.startChat({
             history: messages.slice(0, -1).map(msg => ({
                 role: msg.role === 'user' ? 'user' : 'model',
-                parts: [{ text: msg.content }],
+                parts: [{ text: msg.message }],
             })),
         });
 
